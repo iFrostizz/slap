@@ -71,6 +71,7 @@ impl LanguageServer for Backend {
                         "dummy.do_something".to_string(),
                         "format.execute".to_string(),
                         "linter.some_lint.execute".to_string(),
+                        "linter.ai_sec.execute".to_string(),
                     ],
                     work_done_progress_options: Default::default(),
                 }),
@@ -128,17 +129,20 @@ impl LanguageServer for Backend {
             .await;
     }
 
-    async fn execute_command(&self, _: ExecuteCommandParams) -> Result<Option<Value>> {
+    async fn execute_command(&self, params: ExecuteCommandParams) -> Result<Option<Value>> {
         log::debug!("execute_command");
 
         self.client
             .log_message(MessageType::INFO, "command executed!")
             .await;
 
-        match self.client.apply_edit(WorkspaceEdit::default()).await {
-            Ok(res) if res.applied => self.client.log_message(MessageType::INFO, "applied").await,
-            Ok(_) => self.client.log_message(MessageType::INFO, "rejected").await,
-            Err(err) => self.client.log_message(MessageType::ERROR, err).await,
+        match params.command.as_str() {
+            "linter.ai_sec.execute" => {
+                // log::info!("{:?}", &params);
+                // self.update_lsp(uri).await;
+                // TODO need to get current file and range from params, don't know how to pass from neovim.
+            }
+            _ => unimplemented!(),
         }
 
         Ok(None)

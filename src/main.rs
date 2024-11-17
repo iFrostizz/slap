@@ -34,8 +34,7 @@ async fn main() {
     let args = cli::Args::parse();
     let path = std::env::current_dir().expect("failed to get getcwd");
     let server = lsp::SlapServer::new(path, args.transport);
-    // let detectors: Vec<Box<dyn Detector>> = vec![Box::new(AIDetector), Box::new(U256Detector)];
-    let detectors: Vec<Box<dyn Detector>> = vec![Box::new(StructsDetector)];
+    let detectors: Vec<Box<dyn Detector>> = vec![Box::new(AIDetector), Box::new(StructsDetector)];
     let detectors = Detectors(detectors);
     server.serve(detectors).await;
 }
